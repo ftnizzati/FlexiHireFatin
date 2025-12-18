@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/bottom_nav_bar.dart';
 
 // ============================================================================
 // THIS IS THE PAGE WIDGET - It tells Flutter this is a page that will change
@@ -126,7 +127,7 @@ class _WithdrawEarningsPageState extends State<withdraw_earning_page> {
                 builder: (context) => AlertDialog(
                   title: const Text('Withdrawal Info'),
                   content: const Text(
-                    'Withdrawal requests are processed within 2-3 business days. Ensure all information is accurate.',
+                    'Withdrawal requests are processed immediately. Ensure all information is accurate.',
                   ),
                   actions: [
                     // OK button to close the dialog
@@ -374,34 +375,13 @@ class _WithdrawEarningsPageState extends State<withdraw_earning_page> {
       // ===================================================================
       // BOTTOM NAVIGATION BAR - The 4 tabs at the bottom
       // ===================================================================
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF0F1E3C),
-        selectedItemColor: const Color(0xFFFF8A50), // Orange when selected
-        unselectedItemColor: Colors.white54, // Gray when not selected
-        type: BottomNavigationBarType.fixed, // Show all items
-        items: [
-          // Tab 1 - Discover
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Discover',
-          ),
-          // Tab 2 - My Jobs
-          BottomNavigationBarItem(
-            icon: Icon(Icons.work),
-            label: 'My Jobs',
-          ),
-          // Tab 3 - Messages
-          BottomNavigationBarItem(
-            icon: Icon(Icons.mail),
-            label: 'Messages',
-          ),
-          // Tab 4 - Profile
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomBottomNavBar(
+  selectedIndex: 0, // 0 for Discover, 1 for My Jobs, 2 for Messages, 3 for Profile
+  onTap: (index) {
+    // Handle navigation based on index
+    print('Tab $index clicked');
+  },
+),
     );
   }
 

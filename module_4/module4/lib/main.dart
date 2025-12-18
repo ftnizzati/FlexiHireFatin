@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'pages/withdraw_earning_page.dart';
 import 'pages/employer_transfer_page.dart';
+import 'pages/earnings_history_page.dart';
+import 'pages/employer_review_page.dart';
+import 'components/bottom_nav_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -158,10 +161,88 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 20), // Space between buttons
+
+              // ============================================================
+              // BUTTON 3 - Earnings History Button
+              // ============================================================
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const earnings_history_page(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 56, 142, 60), // Green
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                  ),
+                  child: const Text(
+                    'Earnings History',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // ============================================================
+              // BUTTON 4 - Employer Review Button
+              // ============================================================
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const employer_review_page(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 3, 169, 244), // Blue
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                  ),
+                  child: const Text(
+                    'Employer Review',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
+    
+    bottomNavigationBar: CustomBottomNavBar(
+    selectedIndex: 0, // 0 for Discover, 1 for My Jobs, 2 for Messages, 3 for Profile
+    onTap: (index) {
+    // Handle navigation based on index
+    print('Tab $index clicked');
+      },
+    ),
+    
+    
     );
   }
 }

@@ -83,6 +83,11 @@ class CustomBottomNavBar extends StatelessWidget {
                 selectedIcon: Icon(CupertinoIcons.person_fill),
                 label: 'Profile',
               ),
+              NavigationDestination(
+                icon: Icon(CupertinoIcons.briefcase),
+                selectedIcon: Icon(CupertinoIcons.briefcase_fill),
+                label: 'Job Posts',
+              ),
             ],
           ),
         ),

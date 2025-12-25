@@ -278,6 +278,8 @@ class _ProfilePageState extends State<ProfilePage> {
       case 3:
         // Already on Profile
         break;
+      case 4:
+        Navigator.of(context).pushReplacementNamed('/job_posts');
     }
   }
 }

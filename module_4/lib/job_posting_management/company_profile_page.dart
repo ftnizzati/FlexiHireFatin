@@ -14,7 +14,7 @@ class CompanyProfilePage extends StatefulWidget {
 }
 
 class _CompanyProfilePageState extends State<CompanyProfilePage> {
-  int _selectedNavIndex = 3; // Profile tab
+  int _selectedNavIndex = 2; // Profile tab
 
   @override
   Widget build(BuildContext context) {

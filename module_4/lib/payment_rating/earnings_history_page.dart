@@ -65,12 +65,12 @@ class _EarningsHistoryPageState extends State<EarningsHistoryPage> {
       // APP BAR - The top header of the page
       // ===================================================================
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 15, 30, 60),
         elevation: 0,
         
         // LEFT SIDE - Back arrow button
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 21, 36, 69)),
+          icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 255, 255)),
           // When clicked, go back to the previous page
           onPressed: () => Navigator.pop(context),
         ),
@@ -79,7 +79,7 @@ class _EarningsHistoryPageState extends State<EarningsHistoryPage> {
         title: const Text(
           'Earnings History',
           style: TextStyle(
-            color: Color.fromARGB(255, 21, 36, 69),
+            color: Color.fromARGB(255, 255, 255, 255),
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),

@@ -65,39 +65,77 @@ class _MyJobsPageState extends State<MyJobsPage> {
 
   Widget _jobCard(MyJobApplication app) {
     final statusMap = {
-      JobStatus.applied: ('Applied', Colors.orangeAccent),
-      JobStatus.hired: ('Hired', Colors.greenAccent),
-      JobStatus.rejected: ('Rejected', Colors.redAccent),
+      JobStatus.applied: ('Applied', Colors.orange),
+      JobStatus.hired: ('Hired', Colors.green),
+      JobStatus.rejected: ('Rejected', Colors.red),
     };
 
     final status = statusMap[app.status]!;
 
-    return Card(
-      elevation: 3,
+    return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(app.jobTitle,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text(app.description,
-                style: const TextStyle(color: Colors.black54)),
-            const SizedBox(height: 6),
-            Text(
-              '${app.company} • ${app.location} • ${app.payRate}',
-              style: const TextStyle(color: Colors.black54),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 10,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  app.jobTitle,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: status.$2.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  status.$1,
+                  style: TextStyle(
+                    color: status.$2,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            app.description,
+            style: const TextStyle(color: Colors.black54),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${app.company} • ${app.location} • RM ${app.payRate}/hr',
+            style: const TextStyle(
+              color: Colors.black54,
+              fontSize: 12,
             ),
-            const SizedBox(height: 12),
-            Chip(label: Text(status.$1), backgroundColor: status.$2),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
 
   Widget _sectionTitle(String text) =>
       Padding(

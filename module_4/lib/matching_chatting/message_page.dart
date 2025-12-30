@@ -11,10 +11,15 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  int _selectedNavIndex = 3; // Message tab
+  int _navIndexForMessage(UserRole role) {
+    return role == UserRole.employee ? 2 : 3;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final int selectedIndex = _navIndexForMessage(currentUserRole);
+
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 250, 250, 251),
       appBar: AppBar(
@@ -55,17 +60,10 @@ class _MessagePageState extends State<MessagePage> {
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(
-        selectedIndex: _selectedNavIndex,
+        selectedIndex: selectedIndex,
         role: currentUserRole,
-        onTap: (index) {
-          setState(() {
-            _selectedNavIndex = index;
-          });
-          NavigationHelper.navigate(context, index, currentUserRole);
-        },
-        onMiddleButtonPressed: () {
-          NavigationHelper.handleFab(context);
-        },
+        onTap: (index) => NavigationHelper.navigateBottomTab(context, index, currentUserRole),
+        onMiddleButtonPressed: () => NavigationHelper.onMiddlePressed(context, currentUserRole),
       ),
     );
   }

@@ -4,7 +4,8 @@ import '../components/bottom_nav_bar.dart';
 import 'job_model.dart';
 import 'create_job_page.dart';
 import 'applicants_page.dart';
-import '../job_posting_management/hires_page.dart'; 
+import '../job_posting_management/hires_page.dart';
+import 'dummy_jobs.dart'; 
 import '../navigation_helper.dart';
 
 class JobPostingPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class JobPostingPage extends StatefulWidget {
 
 class _JobPostingPageState extends State<JobPostingPage> {
   int _selectedNavIndex = 0; // Start at Jobs tab
-  final List<Job> recruiterJobs = [];
+  final List<Job> recruiterJobs = List.from(dummyJobs);
 
   @override
   Widget build(BuildContext context) {

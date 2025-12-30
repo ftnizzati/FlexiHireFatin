@@ -23,8 +23,8 @@ class _CreateJobPageState extends State<CreateJobPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFB),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0F1E3C),
-        title: const Text('Create Job', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        title: const Text('Create Job', style: TextStyle(color: Color.fromARGB(255, 21, 36, 69))),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -86,7 +86,7 @@ class _CreateJobPageState extends State<CreateJobPage> {
                       Navigator.pop(context, newJob);
                     }
                   },
-                  child: const Text('Create Job', style: TextStyle(fontSize: 16)),
+                  child: const Text('Create Job', style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ),
             ],

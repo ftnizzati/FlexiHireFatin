@@ -5,4 +5,4 @@ enum UserRole {
 
 // TEMPORARY: hardcode role
 // Later you can get this from login / database
-UserRole currentUserRole = UserRole.employee;
+UserRole currentUserRole = UserRole.recruiter;

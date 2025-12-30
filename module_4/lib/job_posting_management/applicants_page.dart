@@ -22,6 +22,7 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F1E3C),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Applicants – ${widget.job.title}',
           style: const TextStyle(color: Colors.white),

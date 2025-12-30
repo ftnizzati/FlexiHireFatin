@@ -16,6 +16,7 @@ class HiresPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F1E3C),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Hired – ${job.title}',
           style: const TextStyle(color: Colors.white),

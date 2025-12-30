@@ -4,6 +4,8 @@ import '../payment_rating/withdraw_earning_page.dart';
 import '../payment_rating/employer_transfer_page.dart';
 import '../payment_rating/earnings_history_page.dart';
 import '../payment_rating/employer_review_page.dart';
+import '../user_role.dart';
+import '../navigation_helper.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,10 +15,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  int _selectedNavIndex = 3; // Profile tab
+  int _navIndexForProfile(UserRole role) {
+    return role == UserRole.employee ? 3 : 4;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final int selectedIndex = _navIndexForProfile(currentUserRole);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 250, 250, 251),
       appBar: AppBar(
@@ -135,13 +141,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(
-        selectedIndex: _selectedNavIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedNavIndex = index;
-          });
-          _navigateBottomTab(index);
-        },
+        selectedIndex: selectedIndex,
+        role: currentUserRole,
+        onTap: (index) => NavigationHelper.navigateBottomTab(context, index, currentUserRole),
+        onMiddleButtonPressed: () => NavigationHelper.onMiddlePressed(context, currentUserRole),
       ),
     );
   }
@@ -263,23 +266,5 @@ class _ProfilePageState extends State<ProfilePage> {
         break;
     }
   }
-
-  void _navigateBottomTab(int index) {
-    switch (index) {
-      case 0:
-        Navigator.of(context).pushReplacementNamed('/discovery');
-        break;
-      case 1:
-        Navigator.of(context).pushReplacementNamed('/my_jobs');
-        break;
-      case 2:
-        Navigator.of(context).pushReplacementNamed('/message');
-        break;
-      case 3:
-        // Already on Profile
-        break;
-      case 4:
-        Navigator.of(context).pushReplacementNamed('/job_posts');
-    }
-  }
 }
+

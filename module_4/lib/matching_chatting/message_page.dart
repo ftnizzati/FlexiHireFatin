@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:module_4/user_role.dart';
 import '../components/bottom_nav_bar.dart';
+import '../navigation_helper.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key});
@@ -9,7 +11,7 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  int _selectedNavIndex = 2; // Message tab
+  int _selectedNavIndex = 3; // Message tab
 
   @override
   Widget build(BuildContext context) {
@@ -54,30 +56,17 @@ class _MessagePageState extends State<MessagePage> {
       ),
       bottomNavigationBar: CustomBottomNavBar(
         selectedIndex: _selectedNavIndex,
+        role: currentUserRole,
         onTap: (index) {
           setState(() {
             _selectedNavIndex = index;
           });
-          _navigateToPage(index);
+          NavigationHelper.navigate(context, index, currentUserRole);
+        },
+        onMiddleButtonPressed: () {
+          NavigationHelper.handleFab(context);
         },
       ),
     );
-  }
-
-  void _navigateToPage(int index) {
-    switch (index) {
-      case 0:
-        Navigator.of(context).pushReplacementNamed('/discovery');
-        break;
-      case 1:
-        Navigator.of(context).pushReplacementNamed('/my_jobs');
-        break;
-      case 2:
-        // Already on Message
-        break;
-      case 3:
-        Navigator.of(context).pushReplacementNamed('/profile');
-        break;
-    }
   }
 }

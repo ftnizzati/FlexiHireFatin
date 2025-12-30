@@ -1,37 +1,25 @@
-import 'job_model.dart';
 import 'job_application.dart';
+import 'applicant.dart';
 
 final List<JobApplication> dummyJobApplications = [
   JobApplication(
-    job: Job(
-      id: '1',
-      title: 'Cafe Assistant',
-      company: 'Kopi Penang',
-      location: 'George Town',
-      payRate: 8.0,
-      description: 'Assist cafe operations',
+    applicant: Applicant(
+      name: 'Alice Tan',
+      email: 'alice@example.com',
     ),
-    status: JobStatus.accepted,
+    status: JobStatus.applied,
   ),
   JobApplication(
-    job: Job(
-      id: '2',
-      title: 'Retail Helper',
-      company: 'Mini Mart',
-      location: 'Bayan Lepas',
-      payRate: 7.5,
-      description: 'Help store operations',
+    applicant: Applicant(
+      name: 'Bob Lee',
+      email: 'bob@example.com',
     ),
-    status: JobStatus.pending,
+    status: JobStatus.hired,
   ),
   JobApplication(
-    job: Job(
-      id: '3',
-      title: 'Warehouse Packer',
-      company: 'LogiPro',
-      location: 'Bukit Mertajam',
-      payRate: 9.0,
-      description: 'Packing and sorting goods',
+    applicant: Applicant(
+      name: 'Charlie Lim',
+      email: 'charlie@example.com',
     ),
     status: JobStatus.rejected,
   ),

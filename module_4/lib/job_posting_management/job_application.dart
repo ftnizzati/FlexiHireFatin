@@ -1,17 +1,13 @@
-import 'job_model.dart';
+import 'applicant.dart';
 
-enum JobStatus {
-  pending,
-  accepted,
-  rejected,
-}
+enum JobStatus { applied, hired, rejected }
 
 class JobApplication {
-  final Job job;
-  final JobStatus status;
+  final Applicant applicant;
+  JobStatus status;
 
   JobApplication({
-    required this.job,
-    required this.status,
+    required this.applicant,
+    this.status = JobStatus.applied,
   });
 }

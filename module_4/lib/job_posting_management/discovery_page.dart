@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../components/bottom_nav_bar.dart';
 import 'job_model.dart';
 import 'dummy_jobs.dart';
+import '../user_role.dart';
+import '../navigation_helper.dart';
 
 class DiscoveryPage extends StatefulWidget {
   const DiscoveryPage({super.key});
@@ -12,11 +14,10 @@ class DiscoveryPage extends StatefulWidget {
 
 class _DiscoveryPageState extends State<DiscoveryPage> {
   String searchQuery = '';
-  int _selectedNavIndex = 0; // Discovery tab
+  int _selectedNavIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    // 🔍 Filter jobs based on search
     final filteredJobs = dummyJobs.where((job) {
       return job.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
           job.company.toLowerCase().contains(searchQuery.toLowerCase());
@@ -38,7 +39,6 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
       ),
       body: Column(
         children: [
-          // 🔍 Search bar
           Padding(
             padding: const EdgeInsets.all(12),
             child: TextField(
@@ -48,61 +48,43 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
+                setState(() => searchQuery = value);
               },
             ),
           ),
-
-          // 📋 Job list
           Expanded(
             child: filteredJobs.isEmpty
                 ? const Center(
-              child: Text(
-                'No jobs found',
-                style: TextStyle(color: Colors.grey),
-              ),
-            )
+                    child: Text(
+                      'No jobs found',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  )
                 : ListView.builder(
-              itemCount: filteredJobs.length,
-              itemBuilder: (context, index) {
-                final job = filteredJobs[index];
-                return _JobCard(job: job);
-              },
-            ),
+                    itemCount: filteredJobs.length,
+                    itemBuilder: (context, index) {
+                      final job = filteredJobs[index];
+                      return _JobCard(job: job);
+                    },
+                  ),
           ),
         ],
       ),
+
       bottomNavigationBar: CustomBottomNavBar(
         selectedIndex: _selectedNavIndex,
+        role: currentUserRole,
         onTap: (index) {
           setState(() {
             _selectedNavIndex = index;
           });
-          _navigateToPage(index);
+          NavigationHelper.navigate(context, index, currentUserRole);
+        },
+        onMiddleButtonPressed: () {
+          NavigationHelper.handleFab(context);
         },
       ),
     );
-  }
-
-  void _navigateToPage(int index) {
-    switch (index) {
-      case 0:
-        break; // Discovery
-      case 1:
-        Navigator.of(context).pushReplacementNamed('/my_jobs');
-        break;
-      case 2:
-        Navigator.of(context).pushReplacementNamed('/message');
-        break;
-      case 3:
-        Navigator.of(context).pushReplacementNamed('/profile');
-        break;
-      case 4:
-        Navigator.of(context).pushReplacementNamed('/job_posts'); 
-        break;
-    }
   }
 }
 
@@ -151,3 +133,4 @@ class _JobCard extends StatelessWidget {
     );
   }
 }
+

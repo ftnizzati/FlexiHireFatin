@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:module_4/user_role.dart';
 import '../components/bottom_nav_bar.dart';
 import 'job_model.dart';
 import 'create_job_page.dart';
 import 'applicants_page.dart';
+import '../job_posting_management/hires_page.dart'; 
+import '../navigation_helper.dart';
 
 class JobPostingPage extends StatefulWidget {
   const JobPostingPage({super.key});
@@ -12,7 +15,7 @@ class JobPostingPage extends StatefulWidget {
 }
 
 class _JobPostingPageState extends State<JobPostingPage> {
-  int _selectedNavIndex = 4;
+  int _selectedNavIndex = 0; // Start at Jobs tab
   final List<Job> recruiterJobs = [];
 
   @override
@@ -22,11 +25,16 @@ class _JobPostingPageState extends State<JobPostingPage> {
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F1E3C),
+        elevation: 0,
         title: const Text(
           'My Job Postings',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white, 
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          
+          ),
         ),
-        centerTitle: true,
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -34,9 +42,7 @@ class _JobPostingPageState extends State<JobPostingPage> {
         onPressed: () async {
           final Job? newJob = await Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const CreateJobPage(),
-            ),
+            MaterialPageRoute(builder: (context) => const CreateJobPage()),
           );
 
           if (newJob != null) {
@@ -52,25 +58,18 @@ class _JobPostingPageState extends State<JobPostingPage> {
 
       bottomNavigationBar: CustomBottomNavBar(
         selectedIndex: _selectedNavIndex,
+        role: currentUserRole,
         onTap: (index) {
           setState(() {
             _selectedNavIndex = index;
           });
-          _navigateToPage(index);
+          NavigationHelper.navigate(context, index, currentUserRole);
+        },
+        onMiddleButtonPressed: () {
+          NavigationHelper.handleFab(context);
         },
       ),
     );
-  }
-
-  void _navigateToPage(int index) {
-    switch (index) {
-      case 2:
-        Navigator.of(context).pushReplacementNamed('/message');
-        break;
-      case 3:
-        Navigator.of(context).pushReplacementNamed('/profile');
-        break;
-    }
   }
 
   // ===============================
@@ -92,71 +91,87 @@ class _JobPostingPageState extends State<JobPostingPage> {
       itemCount: recruiterJobs.length,
       itemBuilder: (context, index) {
         final job = recruiterJobs[index];
-
-        return Card(
-          elevation: 3,
-          margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  job.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  job.description,
-                  style: const TextStyle(color: Colors.black54),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '${job.location} • ${job.payRate}',
-                  style: const TextStyle(color: Colors.black54),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0F1E3C),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ApplicantsPage(jobId: job.id),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'Applicants',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          recruiterJobs.removeAt(index);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+        return JobCard(
+          job: job,
+          onApplicants: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ApplicantsPage(job: job)),
+            );
+          },
+          onHires: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HiresPage(job: job)),
+            );
+          },
+          onDelete: () {
+            setState(() {
+              recruiterJobs.removeAt(index);
+            });
+          },
         );
       },
+    );
+  }
+}
+
+// ===============================
+// JOB CARD WIDGET
+// ===============================
+class JobCard extends StatelessWidget {
+  final Job job;
+  final VoidCallback onApplicants;
+  final VoidCallback onHires;
+  final VoidCallback onDelete;
+
+  const JobCard({
+    required this.job,
+    required this.onApplicants,
+    required this.onHires,
+    required this.onDelete,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(job.title,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(job.description, style: const TextStyle(color: Colors.black54)),
+            const SizedBox(height: 6),
+            Text('${job.location} • ${job.payRate}',
+                style: const TextStyle(color: Colors.black54)),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0F1E3C)),
+                  onPressed: onApplicants,
+                  child: const Text('Applicants', style: TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  onPressed: onHires,
+                  child: const Text('Hires', style: TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(width: 8),
+                IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: onDelete),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

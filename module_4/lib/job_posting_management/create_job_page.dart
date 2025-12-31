@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'job_model.dart';
 
 class CreateJobPage extends StatefulWidget {
-  const CreateJobPage({super.key});
+  final Job? existingJob;
+
+  const CreateJobPage({super.key, this.existingJob});
 
   @override
   State<CreateJobPage> createState() => _CreateJobPageState();
@@ -18,14 +20,44 @@ class _CreateJobPageState extends State<CreateJobPage> {
   final TextEditingController _payRateController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
+  bool get isEdit => widget.existingJob != null;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final job = widget.existingJob;
+    if (job != null) {
+      _titleController.text = job.title;
+      _companyController.text = job.company;
+      _locationController.text = job.location;
+      _payRateController.text = job.payRate.toString();
+      _descriptionController.text = job.description;
+    }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _companyController.dispose();
+    _locationController.dispose();
+    _payRateController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFB),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        title: const Text('Create Job', style: TextStyle(color: Color.fromARGB(255, 21, 36, 69))),
+        title: Text(
+          isEdit ? 'Edit Job' : 'Create Job',
+          style: const TextStyle(color: Color.fromARGB(255, 21, 36, 69)),
+        ),
         centerTitle: true,
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 21, 36, 69)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -39,9 +71,10 @@ class _CreateJobPageState extends State<CreateJobPage> {
               const SizedBox(height: 16),
               _buildTextField(_locationController, 'Location'),
               const SizedBox(height: 16),
+
               TextFormField(
                 controller: _payRateController,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                 ],
@@ -55,7 +88,9 @@ class _CreateJobPageState extends State<CreateJobPage> {
                   return null;
                 },
               ),
+
               const SizedBox(height: 16),
+
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 4,
@@ -64,7 +99,9 @@ class _CreateJobPageState extends State<CreateJobPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 30),
+
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -72,21 +109,11 @@ class _CreateJobPageState extends State<CreateJobPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0F1E3C),
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final double parsedPayRate = double.tryParse(_payRateController.text) ?? 0.0;
-                      final Job newJob = Job(
-                        id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        title: _titleController.text,
-                        company: _companyController.text,
-                        location: _locationController.text,
-                        payRate: parsedPayRate,
-                        description: _descriptionController.text,
-                      );
-                      Navigator.pop(context, newJob);
-                    }
-                  },
-                  child: const Text('Create Job', style: TextStyle(fontSize: 16, color: Colors.white)),
+                  onPressed: _saveJob,
+                  child: Text(
+                    isEdit ? 'Save Changes' : 'Create Job',
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
               ),
             ],
@@ -94,6 +121,26 @@ class _CreateJobPageState extends State<CreateJobPage> {
         ),
       ),
     );
+  }
+
+  void _saveJob() {
+    if (!_formKey.currentState!.validate()) return;
+
+    final double parsedPayRate = double.tryParse(_payRateController.text) ?? 0.0;
+
+    final Job jobToReturn = Job(
+
+      id: widget.existingJob?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      title: _titleController.text,
+      company: _companyController.text,
+      location: _locationController.text,
+      payRate: parsedPayRate,
+      description: _descriptionController.text,
+
+      applicants: widget.existingJob?.applicants ?? [],
+    );
+
+    Navigator.pop(context, jobToReturn);
   }
 
   Widget _buildTextField(TextEditingController controller, String label) {

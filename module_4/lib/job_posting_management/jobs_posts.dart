@@ -7,6 +7,7 @@ import 'applicants_page.dart';
 import '../job_posting_management/hires_page.dart';
 import 'dummy_jobs.dart'; 
 import '../navigation_helper.dart';
+import 'job_details_page.dart';
 
 class JobPostingPage extends StatefulWidget {
   const JobPostingPage({super.key});
@@ -94,6 +95,28 @@ class _JobPostingPageState extends State<JobPostingPage> {
         final job = recruiterJobs[index];
         return JobCard(
           job: job,
+
+          // NEW: open full details page
+          onOpenDetails: () async {
+            final result = await Navigator.push<JobDetailsResult>(
+              context,
+              MaterialPageRoute(
+                builder: (_) => JobDetailsPage(job: job),
+              ),
+            );
+
+            if (result == null) return;
+
+            setState(() {
+              if (result.action == JobDetailsAction.updated && result.updatedJob != null) {
+                recruiterJobs[index] = result.updatedJob!;
+              } else if (result.action == JobDetailsAction.deleted) {
+                recruiterJobs.removeAt(index);
+              }
+            });
+          },
+
+          // keep these buttons if you still want quick access
           onApplicants: () {
             Navigator.push(
               context,
@@ -122,12 +145,14 @@ class _JobPostingPageState extends State<JobPostingPage> {
 // ===============================
 class JobCard extends StatelessWidget {
   final Job job;
+  final VoidCallback onOpenDetails;
   final VoidCallback onApplicants;
   final VoidCallback onHires;
   final VoidCallback onDelete;
 
   const JobCard({
     required this.job,
+    required this.onOpenDetails,
     required this.onApplicants,
     required this.onHires,
     required this.onDelete,
@@ -136,41 +161,44 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(job.title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text(job.description, style: const TextStyle(color: Colors.black54)),
-            const SizedBox(height: 6),
-            Text('${job.location} • ${job.payRate}',
-                style: const TextStyle(color: Colors.black54)),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0F1E3C)),
-                  onPressed: onApplicants,
-                  child: const Text('Applicants', style: TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  onPressed: onHires,
-                  child: const Text('Hires', style: TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(width: 8),
-                IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: onDelete),
-              ],
-            ),
-          ],
+    return InkWell(
+      onTap: onOpenDetails,
+      child: Card(
+        elevation: 3,
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(job.title,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(job.description, style: const TextStyle(color: Colors.black54)),
+              const SizedBox(height: 6),
+              Text('${job.location} • ${job.payRate}',
+                  style: const TextStyle(color: Colors.black54)),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0F1E3C)),
+                    onPressed: onApplicants,
+                    child: const Text('Applicants', style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    onPressed: onHires,
+                    child: const Text('Hires', style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: onDelete),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

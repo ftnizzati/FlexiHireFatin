@@ -83,11 +83,10 @@ class RoleSelectionPage extends StatelessWidget {
   void _goToRole(BuildContext context, UserRole role) {
     currentUserRole = role;
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RootPage(role: role),
-      ),
+    final firstRoute = role == UserRole.employee ? '/discovery' : '/jobs';
+
+    Navigator.pushReplacementNamed(
+      context, firstRoute
     );
   }
 
@@ -170,17 +169,7 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  int _selectedNavIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Navigate once to the initial page for the role
-      NavigationHelper.navigate(context, _selectedNavIndex, widget.role);
-    });
-  }
+  late int _selectedNavIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -191,13 +180,11 @@ class _RootPageState extends State<RootPage> {
         onTap: (index) {
           setState(() => _selectedNavIndex = index);
 
-          // If recruiter tapped FAB slot (index 2), don't navigate
           if (widget.role == UserRole.recruiter && index == 2) return;
 
           NavigationHelper.navigate(context, index, widget.role);
         },
         onMiddleButtonPressed: () {
-          // Recruiter FAB action
           NavigationHelper.handleFab(context);
         },
       ),

@@ -1,5 +1,6 @@
 import 'job_application.dart';
 import 'applicant.dart';
+import 'job_status.dart';
 
 final List<JobApplication> dummyJobApplications = [
   JobApplication(

@@ -1,6 +1,5 @@
 import 'applicant.dart';
-
-enum JobStatus { applied, hired, rejected }
+import 'job_status.dart';
 
 class JobApplication {
   final Applicant applicant;

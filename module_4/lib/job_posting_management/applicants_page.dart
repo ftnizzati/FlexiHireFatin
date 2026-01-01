@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'job_model.dart';
 import 'job_application.dart';
+import 'job_status.dart';
 
 class ApplicantsPage extends StatefulWidget {
   final Job job;

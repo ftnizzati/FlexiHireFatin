@@ -1,4 +1,5 @@
-import 'job_application.dart';
+import 'job_status.dart';
+import 'micro_shift.dart';
 
 class MyJobApplication {
   final String jobTitle;
@@ -8,6 +9,8 @@ class MyJobApplication {
   final String description;
   final JobStatus status;
 
+  final List<MicroShift> microShifts;
+
   MyJobApplication({
     required this.jobTitle,
     required this.company,
@@ -15,5 +18,6 @@ class MyJobApplication {
     required this.payRate,
     required this.description,
     required this.status,
+    this.microShifts = const [],
   });
 }

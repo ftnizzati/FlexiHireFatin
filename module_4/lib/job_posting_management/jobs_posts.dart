@@ -8,6 +8,7 @@ import '../job_posting_management/hires_page.dart';
 import 'dummy_jobs.dart'; 
 import '../navigation_helper.dart';
 import 'job_details_page.dart';
+import 'micro_shift.dart';
 
 class JobPostingPage extends StatefulWidget {
   const JobPostingPage({super.key});
@@ -176,10 +177,38 @@ class JobCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Text(job.description, style: const TextStyle(color: Colors.black54)),
               const SizedBox(height: 6),
-              Text('${job.location} • ${job.payRate}',
-                  style: const TextStyle(color: Colors.black54)),
-              const SizedBox(height: 12),
-              Row(
+              Text('${job.location} • RM ${job.payRate}/hr',
+                style: const TextStyle(color: Colors.black54)),
+
+            if (job.microShifts.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              const Text(
+                'Micro-shifts',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: job.microShifts.map((shift) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF2F4F7),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      shift.toDisplay(),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+
+            const SizedBox(height: 12),
+            Row(
+
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

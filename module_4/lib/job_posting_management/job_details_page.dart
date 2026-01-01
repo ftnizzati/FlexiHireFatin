@@ -39,15 +39,41 @@ class JobDetailsPage extends StatelessWidget {
 
                 _infoRow('Location', job.location),
                 const SizedBox(height: 8),
-                _infoRow('Pay Rate', job.payRate.toString()),
+                _infoRow('Pay Rate', 'RM ${job.payRate.toStringAsFixed(2)}/hr'),
                 const SizedBox(height: 14),
 
                 const Text('Description', style: TextStyle(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 6),
                 Text(job.description, style: const TextStyle(color: Colors.black87)),
 
-                const Spacer(),
+                const SizedBox(height: 16),
 
+                const Text('Micro-shifts', style: TextStyle(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+
+                job.microShifts.isEmpty
+                    ? const Text(
+                        'No micro-shifts set.',
+                        style: TextStyle(color: Colors.grey),
+                      )
+                    : Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: job.microShifts.map((shift) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF2F4F7),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              shift.toDisplay(),
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                const Spacer(),
                 Row(
                   children: [
                     Expanded(

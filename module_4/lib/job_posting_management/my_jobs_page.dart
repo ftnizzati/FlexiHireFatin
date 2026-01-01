@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../components/bottom_nav_bar.dart';
 import '../user_role.dart';
-import 'job_application.dart';
 import 'dummy_my_jobs.dart';
 import 'my_job_application.dart';
 import '../navigation_helper.dart';
+import 'job_status.dart';
 
 class MyJobsPage extends StatefulWidget {
   const MyJobsPage({super.key});
@@ -24,6 +24,9 @@ class _MyJobsPageState extends State<MyJobsPage> {
     final applications =
         myJobsDummy.where((j) => j.status == JobStatus.applied).toList();
 
+    final rejected =
+        myJobsDummy.where((j) => j.status == JobStatus.rejected).toList();
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 250, 250, 251),
       appBar: AppBar(
@@ -37,16 +40,21 @@ class _MyJobsPageState extends State<MyJobsPage> {
           _sectionTitle('Current Jobs'),
           currentJobs.isEmpty
               ? _emptyText('No active jobs')
-              : Column(
-                  children: currentJobs.map(_jobCard).toList(),
-                ),
+              : Column(children: currentJobs.map(_jobCard).toList()),
+
           const SizedBox(height: 20),
+
           _sectionTitle('Applications'),
           applications.isEmpty
               ? _emptyText('No applications yet')
-              : Column(
-                  children: applications.map(_jobCard).toList(),
-                ),
+              : Column(children: applications.map(_jobCard).toList()),
+
+          const SizedBox(height: 20),
+
+          _sectionTitle('Rejected'),
+          rejected.isEmpty
+              ? _emptyText('No rejected applications')
+              : Column(children: rejected.map(_jobCard).toList()),
         ],
       ),
       bottomNavigationBar: CustomBottomNavBar(
@@ -102,7 +110,8 @@ class _MyJobsPageState extends State<MyJobsPage> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: status.$2.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
@@ -119,29 +128,46 @@ class _MyJobsPageState extends State<MyJobsPage> {
             ],
           ),
           const SizedBox(height: 6),
-          Text(
-            app.description,
-            style: const TextStyle(color: Colors.black54),
-          ),
+          Text(app.description, style: const TextStyle(color: Colors.black54)),
           const SizedBox(height: 8),
           Text(
             '${app.company} • ${app.location} • RM ${app.payRate}/hr',
-            style: const TextStyle(
-              color: Colors.black54,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
           ),
+
+          // ✅ micro shifts (non-nullable list)
+          if (app.microShifts.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: app.microShifts.map((shift) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF2F4F7),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    shift.toDisplay(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+
         ],
       ),
     );
   }
 
-
-  Widget _sectionTitle(String text) =>
-      Padding(
+  Widget _sectionTitle(String text) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(text,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       );
 
   Widget _emptyText(String text) =>

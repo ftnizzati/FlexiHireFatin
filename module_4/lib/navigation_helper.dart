@@ -36,10 +36,6 @@ class NavigationHelper {
   }
 
   static int initialIndexForRole(UserRole role) {
-    if (role == UserRole.employee) {
-      return 0; // Discovery
-    } else {
-      return 0; // Jobs
-    }
+    return role == UserRole.employee ? 0 : 0;
   }
 }

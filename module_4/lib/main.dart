@@ -35,10 +35,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: const RoleSelectionPage(),
-
-      /// IMPORTANT:
-      /// - Remove the old '/hires' route (it needs a Job object now, cannot be const).
-      /// - Use Navigator.push(MaterialPageRoute(...)) from JobPostingPage when opening Applicants/Hires.
+      
       routes: {
         // =========================
         // Employee
@@ -83,10 +80,11 @@ class RoleSelectionPage extends StatelessWidget {
   void _goToRole(BuildContext context, UserRole role) {
     currentUserRole = role;
 
-    final firstRoute = role == UserRole.employee ? '/discovery' : '/jobs';
-
-    Navigator.pushReplacementNamed(
-      context, firstRoute
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => RootPage(role: role),
+      ),
     );
   }
 
@@ -169,7 +167,17 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  late int _selectedNavIndex;
+  int _selectedNavIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Navigate once to the initial page for the role
+      NavigationHelper.navigate(context, _selectedNavIndex, widget.role);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,11 +188,13 @@ class _RootPageState extends State<RootPage> {
         onTap: (index) {
           setState(() => _selectedNavIndex = index);
 
+          // If recruiter tapped FAB slot (index 2), don't navigate
           if (widget.role == UserRole.recruiter && index == 2) return;
 
           NavigationHelper.navigate(context, index, widget.role);
         },
         onMiddleButtonPressed: () {
+          // Recruiter FAB action
           NavigationHelper.handleFab(context);
         },
       ),
